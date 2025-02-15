@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction de Tweets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</head>
+
+<body>
+    <div class="notification" id="notification">
+        Merci pour votre réponse !
+    </div>
+    <div class="container">
+        <div class="left-section">
+            <h1>PRÉDICTION<br>DE<br>TWEETS</h1>
+        </div>
+        <div class="right-section">
+            <h2>Texte du tweet</h2>
+            <form onsubmit="predictSentiment(event)">
+                <textarea name="tweet_to_predict" id="tweet"></textarea>
+                <button type="submit">Prédire le sentiment</button>
+            </form>
+            <div id="result"></div>
+            <div class="feedback-buttons" style="display: none;" data-tweet="">
+                <button class="validate-button" onclick="sendFeedback(true)"><i>✔</i> Bonne prédiction</button>
+                <button class="invalidate-button" onclick="sendFeedback(false)"><i>✘</i> Mauvaise prédiction</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

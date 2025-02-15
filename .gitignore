@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+antenv/
+venv/
+ENV/
+
+# NLTK
+nltk_data/
+
+# Tests
+.pytest_cache/
+tests/
+
+# IDE
+.idea/
+.vscode/
+
+# Misc
+.DS_Store
