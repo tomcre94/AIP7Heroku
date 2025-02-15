@@ -26,17 +26,31 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+      - name: Configure Heroku credentials
+        run: |
+          cat > ~/.netrc <<EOF
+          machine git.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_API_KEY
+          EOF
+        env:
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       - name: Add Heroku Remote
         run: heroku git:remote -a aip7heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      - name: Push to Heroku
-        run: |
-          git fetch --unshallow
-          git push heroku HEAD:main --force
+      - name: Deploy to Heroku
+        run: git push heroku HEAD:main --force
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
