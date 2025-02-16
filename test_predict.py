@@ -1,7 +1,7 @@
 import requests
 
 def predict_sentiment(tweet):
-    url = "https://p7aiopc-hgcrbucucpgfajez.francecentral-01.azurewebsites.net/predict"
+    url = "https://aip7heroku-436f0a6aa765.herokuapp.com/predict"
     headers = {"Content-Type": "application/json"}
     payload = {
         "input": tweet
@@ -19,6 +19,6 @@ def predict_sentiment(tweet):
         return response.json()
 
 # Example usage
-tweet = "I love using Azure for my projects!"
+tweet = "I am very happy today"
 prediction = predict_sentiment(tweet)
 print(prediction)
