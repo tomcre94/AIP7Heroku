@@ -9,6 +9,7 @@ import tensorflow_hub as hub
 import os
 import logging
 from pathlib import Path
+from tensorflow import keras
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
