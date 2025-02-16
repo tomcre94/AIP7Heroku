@@ -10,6 +10,9 @@ import os
 import logging
 from pathlib import Path
 from tensorflow import keras
+import tensorflow as tf
+tf.keras.utils.get_custom_objects()
+
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
