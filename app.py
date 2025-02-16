@@ -12,6 +12,7 @@ from pathlib import Path
 from tensorflow import keras
 import tensorflow as tf
 tf.keras.utils.get_custom_objects()
+from tensorflow.keras.models import load_model
 
 
 # Configuration du logging
@@ -53,9 +54,8 @@ def create_app():
         
         # Chargement du modèle LSTM
         logger.info("Chargement du modèle LSTM...")
-        model_path = MODELS_DIR / "model_lstm.pkl"
-        with open(model_path, 'rb') as f:
-            model = pickle.load(f)
+        model_path = MODELS_DIR / "model_lstm.h5"
+        model = load_model(model_path)
 
     def clean_text(text):
         """Nettoie le texte d'entrée"""
