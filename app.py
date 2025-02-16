@@ -21,38 +21,31 @@ stop_words = None
 stemmer = None
 lemmatizer = None
 
+def get_use_model():
+    global use_model
+    if use_model is None:
+        logger.info("Chargement du modèle USE Lite...")
+        use_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder-lite/2")
+    return use_model
+
 def create_app():
     app = Flask(__name__)
     
     # Configuration des chemins
     BASE_DIR = Path(__file__).resolve().parent
     MODELS_DIR = BASE_DIR / "models"
-    NLTK_DATA_DIR = BASE_DIR / "nltk_data"
 
     # Création des répertoires
     MODELS_DIR.mkdir(exist_ok=True)
-    NLTK_DATA_DIR.mkdir(exist_ok=True)
-
-    # Configuration NLTK
-    nltk.data.path.append(str(NLTK_DATA_DIR))
 
     # Initialisation
     with app.app_context():
-        global use_model, model, stop_words, stemmer, lemmatizer
-        
-        # Téléchargement des données NLTK
-        nltk.download('punkt', download_dir=str(NLTK_DATA_DIR))
-        nltk.download('stopwords', download_dir=str(NLTK_DATA_DIR))
-        nltk.download('wordnet', download_dir=str(NLTK_DATA_DIR))
+        global model, stop_words, stemmer, lemmatizer
         
         # Initialisation des outils NLP
         stop_words = set(stopwords.words('english'))
         stemmer = PorterStemmer()
         lemmatizer = WordNetLemmatizer()
-        
-        # Chargement du modèle USE
-        logger.info("Chargement du modèle USE...")
-        use_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/2")
         
         # Chargement du modèle LSTM
         logger.info("Chargement du modèle LSTM...")
@@ -95,7 +88,8 @@ def create_app():
             cleaned_text = clean_text(tweet_text)
             logger.info(f"Texte nettoyé: {cleaned_text}")
             
-            # Génération de l'embedding
+            # Chargement du modèle USE Lite uniquement à la première requête
+            use_model = get_use_model()
             embedding = use_model.signatures['default'](tf.constant([cleaned_text]))
             embedding = embedding['default'].numpy()
             embedding_reshaped = embedding.reshape((1, 1, 512))
@@ -115,4 +109,6 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
