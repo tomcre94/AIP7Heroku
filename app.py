@@ -94,7 +94,8 @@ def create_app():
             data = request.get_json()
             tweet_text = data.get('tweet_to_predict', '')
             
-            cleaned_text = clean_text(tweet_text)
+            #cleaned_text = clean_text(tweet_text)
+            cleaned_text = tweet_text 
             logger.info(f"Texte nettoyé: {cleaned_text}")
             
             # Chargement du modèle USE Lite uniquement à la première requête
