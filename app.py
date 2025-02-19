@@ -40,7 +40,7 @@ def create_app():
     
     # Configuration des chemins
     BASE_DIR = Path(__file__).resolve().parent
-    MODELS_DIR = BASE_DIR / "models/model_lstm_savedmodel_rebuilt"  # Utiliser le nouveau modèle reconstruit
+    MODELS_DIR = BASE_DIR / "models/model_lstm_saved_rebuilt"  # Utiliser le nouveau modèle reconstruit
 
     # Création des répertoires
     MODELS_DIR.mkdir(exist_ok=True)
