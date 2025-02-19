@@ -31,7 +31,7 @@ lemmatizer = None
 def get_use_model():
     global use_model
     if use_model is None:
-        logger.info("Chargement du modèle USE Lite...")
+        logger.info("Chargement du modèle USE...")
         use_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/2")
     return use_model
 
@@ -62,27 +62,27 @@ def create_app():
         else:
             model = tf.saved_model.load(model_path)
 
-    def clean_text(text):
-        """Nettoie le texte d'entrée"""
-        if not text:
-            return ""
+    # def clean_text(text):
+    #     """Nettoie le texte d'entrée"""
+    #     if not text:
+    #         return ""
         
-        try:
-            text = re.sub(r'http\S+|www\S+|https\S+', 'URL', text, flags=re.MULTILINE)
-            text = re.sub(r'\@\w+', 'mention', text)
-            text = re.sub(r'\#\w+', 'hashtag', text)
-            text = re.sub(r'[^A-Za-z\s]', '', text)
-            text = text.lower()
+    #     try:
+    #         text = re.sub(r'http\S+|www\S+|https\S+', 'URL', text, flags=re.MULTILINE)
+    #         text = re.sub(r'\@\w+', 'mention', text)
+    #         text = re.sub(r'\#\w+', 'hashtag', text)
+    #         text = re.sub(r'[^A-Za-z\s]', '', text)
+    #         text = text.lower()
             
-            tokens = nltk.word_tokenize(text)
-            tokens = [word for word in tokens if word not in stop_words and word.isalpha()]
-            tokens = [stemmer.stem(word) for word in tokens]
-            tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    #         tokens = nltk.word_tokenize(text)
+    #         tokens = [word for word in tokens if word not in stop_words and word.isalpha()]
+    #         tokens = [stemmer.stem(word) for word in tokens]
+    #         tokens = [lemmatizer.lemmatize(word) for word in tokens]
             
-            return ' '.join(tokens)
-        except Exception as e:
-            logger.error(f"Erreur de nettoyage du texte: {e}")
-            return text
+    #         return ' '.join(tokens)
+    #     except Exception as e:
+    #         logger.error(f"Erreur de nettoyage du texte: {e}")
+    #         return text
 
     @app.route('/')
     def home():
