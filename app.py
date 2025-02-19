@@ -40,7 +40,7 @@ def create_app():
     
     # Configuration des chemins
     BASE_DIR = Path(__file__).resolve().parent
-    MODELS_DIR = BASE_DIR / "models/model_lstm_savedmodel"
+    MODELS_DIR = BASE_DIR / "models/model_lstm_savedmodel_rebuilt"  # Utiliser le nouveau modèle reconstruit
 
     # Création des répertoires
     MODELS_DIR.mkdir(exist_ok=True)
@@ -62,28 +62,6 @@ def create_app():
         else:
             model = tf.saved_model.load(model_path)
 
-    # def clean_text(text):
-    #     """Nettoie le texte d'entrée"""
-    #     if not text:
-    #         return ""
-        
-    #     try:
-    #         text = re.sub(r'http\S+|www\S+|https\S+', 'URL', text, flags=re.MULTILINE)
-    #         text = re.sub(r'\@\w+', 'mention', text)
-    #         text = re.sub(r'\#\w+', 'hashtag', text)
-    #         text = re.sub(r'[^A-Za-z\s]', '', text)
-    #         text = text.lower()
-            
-    #         tokens = nltk.word_tokenize(text)
-    #         tokens = [word for word in tokens if word not in stop_words and word.isalpha()]
-    #         tokens = [stemmer.stem(word) for word in tokens]
-    #         tokens = [lemmatizer.lemmatize(word) for word in tokens]
-            
-    #         return ' '.join(tokens)
-    #     except Exception as e:
-    #         logger.error(f"Erreur de nettoyage du texte: {e}")
-    #         return text
-
     @app.route('/')
     def home():
         return render_template("index.html")
@@ -94,11 +72,12 @@ def create_app():
             data = request.get_json()
             tweet_text = data.get('tweet_to_predict', '')
             
-            #cleaned_text = clean_text(tweet_text)
-            cleaned_text = tweet_text 
+            # Désactiver le prétraitement
+            # cleaned_text = clean_text(tweet_text)
+            cleaned_text = tweet_text  # Utiliser le texte brut
             logger.info(f"Texte nettoyé: {cleaned_text}")
             
-            # Chargement du modèle USE Lite uniquement à la première requête
+            # Chargement du modèle USE uniquement à la première requête
             use_model = get_use_model()
             embedding = use_model.signatures['default'](tf.constant([cleaned_text]))
             embedding = embedding['default'].numpy()
