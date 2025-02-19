@@ -14,6 +14,8 @@ import tensorflow as tf
 tf.keras.utils.get_custom_objects()
 from tensorflow.keras.models import load_model
 
+# Activer les variables de ressources
+tf.compat.v1.enable_resource_variables()
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
@@ -30,7 +32,6 @@ def get_use_model():
     global use_model
     if use_model is None:
         logger.info("Chargement du modèle USE Lite...")
-        tf.compat.v1.enable_resource_variables()  # Ajoutez cette ligne
         use_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder-lite/2")
     return use_model
 
