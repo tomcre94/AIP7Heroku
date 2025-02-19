@@ -32,7 +32,7 @@ def get_use_model():
     global use_model
     if use_model is None:
         logger.info("Chargement du modèle USE Lite...")
-        use_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder-lite/2")
+        use_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/2")
     return use_model
 
 def create_app():
