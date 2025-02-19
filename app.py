@@ -14,6 +14,15 @@ import tensorflow as tf
 tf.keras.utils.get_custom_objects()
 from tensorflow.keras.models import load_model
 
+import tensorflow as tf
+import numpy as np
+import sys
+
+print("✅ Environnement de déploiement")
+print(f"Python version: {sys.version}")
+print(f"TensorFlow version: {tf.__version__}")
+print(f"NumPy version: {np.__version__}")
+
 # Activer les variables de ressources
 tf.compat.v1.enable_resource_variables()
 
