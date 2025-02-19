@@ -8,7 +8,7 @@ import logging
 from pathlib import Path
 import numpy as np
 import sys
-
+os.environ['TF_DISABLE_ESTIMATOR'] = '1' 
 # Activer les variables de ressources
 tf.compat.v1.enable_resource_variables()
 
