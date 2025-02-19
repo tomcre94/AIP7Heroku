@@ -38,7 +38,7 @@ def create_app():
     
     # Configuration des chemins
     BASE_DIR = Path(__file__).resolve().parent
-    MODELS_DIR = BASE_DIR / "models"
+    MODELS_DIR = BASE_DIR / "models/model_lstm_savedmodel"
 
     # Création des répertoires
     MODELS_DIR.mkdir(exist_ok=True)
@@ -54,7 +54,7 @@ def create_app():
         
         # Chargement du modèle LSTM
         logger.info("Chargement du modèle LSTM...")
-        model_path = MODELS_DIR / "model_lstm.h5"
+        model_path = MODELS_DIR / "saved_model"
         model = load_model(model_path)
 
     def clean_text(text):
@@ -99,7 +99,8 @@ def create_app():
             embedding_reshaped = embedding.reshape((1, 1, 512))
             
             # Prédiction
-            probabilities = model.predict(embedding_reshaped)
+            infer = model.signatures["serving_default"]
+            probabilities = infer(tf.constant(embedding_reshaped))['output_0'].numpy()
             prediction = (probabilities > 0.5).astype(int)
             result = "Positif" if prediction[0][0] == 1 else "Négatif"
             
