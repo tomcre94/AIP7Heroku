@@ -1,20 +1,15 @@
 from flask import Flask, render_template, request, jsonify
 import pickle
 import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer, WordNetLemmatizer
 import tensorflow as tf
 import tensorflow_hub as hub
 import os
 import logging
 from pathlib import Path
 from tensorflow import keras
-import tensorflow as tf
 tf.keras.utils.get_custom_objects()
 from tensorflow.keras.models import load_model
 
-import tensorflow as tf
 import numpy as np
 import sys
 
@@ -33,9 +28,6 @@ logger = logging.getLogger(__name__)
 # Variables globales
 use_model = None
 model = None
-stop_words = None
-stemmer = None
-lemmatizer = None
 
 def get_use_model():
     global use_model
@@ -49,20 +41,14 @@ def create_app():
     
     # Configuration des chemins
     BASE_DIR = Path(__file__).resolve().parent
-    MODELS_DIR = BASE_DIR / "models/model_lstm_saved_rebuilt"  # Utiliser le nouveau modèle reconstruit
+    MODELS_DIR = BASE_DIR / "models/model_lstm_saved_rebuilt" 
 
     # Création des répertoires
     MODELS_DIR.mkdir(exist_ok=True)
 
     # Initialisation
     with app.app_context():
-        global model, stop_words, stemmer, lemmatizer
-        
-        # Initialisation des outils NLP
-        stop_words = set(stopwords.words('english'))
-        stemmer = PorterStemmer()
-        lemmatizer = WordNetLemmatizer()
-        
+               
         # Chargement du modèle SavedModel
         logger.info("Chargement du modèle SavedModel...")
         model_path = str(MODELS_DIR)
@@ -81,11 +67,8 @@ def create_app():
             data = request.get_json()
             tweet_text = data.get('tweet_to_predict', '')
             
-            # Désactiver le prétraitement
-            # cleaned_text = clean_text(tweet_text)
-            cleaned_text = tweet_text  # Utiliser le texte brut
-            logger.info(f"Texte nettoyé: {cleaned_text}")
-            
+            # Récupération du texte
+            cleaned_text = tweet_text              
             # Chargement du modèle USE uniquement à la première requête
             use_model = get_use_model()
             embedding = use_model.signatures['default'](tf.constant([cleaned_text]))
