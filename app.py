@@ -52,10 +52,13 @@ def create_app():
         stemmer = PorterStemmer()
         lemmatizer = WordNetLemmatizer()
         
-        # Chargement du modèle LSTM
-        logger.info("Chargement du modèle LSTM...")
-        model_path = MODELS_DIR / "saved_model"
-        model = load_model(model_path)
+        # Chargement du modèle SavedModel
+        logger.info("Chargement du modèle SavedModel...")
+        model_path = str(MODELS_DIR)
+        if not os.path.exists(model_path):
+            logger.error(f"Le chemin du modèle n'existe pas: {model_path}")
+        else:
+            model = tf.saved_model.load(model_path)
 
     def clean_text(text):
         """Nettoie le texte d'entrée"""
