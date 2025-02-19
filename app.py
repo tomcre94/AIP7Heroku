@@ -1,13 +1,10 @@
 from flask import Flask, render_template, request, jsonify
-import pickle
-import re
 import tensorflow as tf
 import tensorflow_hub as hub
 import os
 import logging
 from pathlib import Path
 import numpy as np
-import sys
 os.environ['TF_DISABLE_ESTIMATOR'] = '1' 
 # Activer les variables de ressources
 tf.compat.v1.enable_resource_variables()
