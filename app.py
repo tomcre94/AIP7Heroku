@@ -4,27 +4,18 @@ import os
 import logging
 from pathlib import Path
 import numpy as np
+import joblib
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-import joblib
-
-pipeline = None
-
-def load_joblib_model():
-    global pipeline
-    if pipeline is None:
-        pipeline = joblib.load('models/model_pipeline.joblib')
-        logger.info("Modèle joblib chargé avec succès")
-    return pipeline
-
 def create_app():
     app = Flask(__name__)
 
-    # Charger le modèle scikit-learn
-    pipeline = load_joblib_model()
+    # Charger le modèle une seule fois et l'attacher à `app`
+    app.pipeline = joblib.load('models/model_pipeline.joblib')
+    logger.info("Modèle joblib chargé avec succès")
 
     @app.route('/')
     def home():
@@ -35,8 +26,11 @@ def create_app():
         try:
             data = request.get_json()
             text = data.get('tweet_to_predict', '')
-            prediction = pipeline.predict([text])
+
+            # Utilisation du modèle attaché à l'application
+            prediction = app.pipeline.predict([text])
             result = "Positif" if prediction[0] == 1 else "Négatif"
+
             return jsonify({'prediction': result})
         except Exception as e:
             logger.error(f"Erreur de prédiction: {e}")
